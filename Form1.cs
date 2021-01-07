@@ -49,6 +49,8 @@ namespace AirHockey
 
         byte maxSpeed = 25;
 
+        byte songCount = 0;
+
         Random random = new Random();
 
         SolidBrush blueBrush = new SolidBrush(System.Drawing.Color.DodgerBlue);
@@ -63,25 +65,23 @@ namespace AirHockey
         Font goalFont = new Font("Consolas", 32);
         SoundPlayer goal = new SoundPlayer(Properties.Resources._ONTIVA_COM__Goal_Sound_HQ);
         SoundPlayer hit = new SoundPlayer(Properties.Resources._ONTIVA_COM__BABABOOEY_Sound_Effect_HQ);
-        
+
+        MediaPlayer song;
+
 
         int counter = 0;
 
         public Form1()
         {
             InitializeComponent();
-            Play(Application.StartupPath + "\\ScatmansWorld.wav");
+            song = new System.Windows.Media.MediaPlayer();
+
+            song.Open(new Uri(Application.StartupPath + "\\ScatmansWorld.wav"));
         }
         //play music
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-        }
-        private void Play(string audioPath)
-        {
-            MediaPlayer myPlayer = new MediaPlayer();
-            myPlayer.Open(new System.Uri(audioPath));
-            myPlayer.Play();
+            song.Play();
         }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
@@ -147,6 +147,8 @@ namespace AirHockey
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
+            
+            songCount++;
             // 5% chance of super strong hit
             if (random.Next(1, 100) > 95)
             {
