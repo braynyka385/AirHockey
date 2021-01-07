@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Media;
+using System.IO;
+using System.Windows.Media;
 
 namespace AirHockey
 {
@@ -48,24 +51,38 @@ namespace AirHockey
 
         Random random = new Random();
 
-        SolidBrush blueBrush = new SolidBrush(Color.DodgerBlue);
-        SolidBrush greenBrush = new SolidBrush(Color.Green);
-        SolidBrush whiteBrush = new SolidBrush(Color.White);
-        SolidBrush blackBrush = new SolidBrush(Color.Black);
-        SolidBrush redBrush = new SolidBrush(Color.Crimson);
-        Pen bluePen = new Pen(Color.Blue, 2);
-        Pen blackPen = new Pen(Color.Black, 2);
-        Pen redPen = new Pen(Color.Crimson, 4);
+        SolidBrush blueBrush = new SolidBrush(System.Drawing.Color.DodgerBlue);
+        SolidBrush greenBrush = new SolidBrush(System.Drawing.Color.Green);
+        SolidBrush whiteBrush = new SolidBrush(System.Drawing.Color.White);
+        SolidBrush blackBrush = new SolidBrush(System.Drawing.Color.Black);
+        SolidBrush redBrush = new SolidBrush(System.Drawing.Color.Crimson);
+        System.Drawing.Pen bluePen = new System.Drawing.Pen(System.Drawing.Color.Blue, 2);
+        System.Drawing.Pen blackPen = new System.Drawing.Pen(System.Drawing.Color.Black, 2);
+        System.Drawing.Pen redPen = new System.Drawing.Pen(System.Drawing.Color.Crimson, 4);
         Font screenFont = new Font("Consolas", 12);
         Font goalFont = new Font("Consolas", 32);
+        SoundPlayer goal = new SoundPlayer(Properties.Resources._ONTIVA_COM__Goal_Sound_HQ);
+        SoundPlayer hit = new SoundPlayer(Properties.Resources._ONTIVA_COM__BABABOOEY_Sound_Effect_HQ);
+        
 
         int counter = 0;
 
         public Form1()
         {
             InitializeComponent();
+            Play(Application.StartupPath + "\\ScatmansWorld.wav");
         }
-
+        //play music
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
+        }
+        private void Play(string audioPath)
+        {
+            MediaPlayer myPlayer = new MediaPlayer();
+            myPlayer.Open(new System.Uri(audioPath));
+            myPlayer.Play();
+        }
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -162,16 +179,20 @@ namespace AirHockey
             {
                 ballXSpeed *= -1;
                 ballX = this.Width - ballWidth - 1;
+                hit.Play();
             }
 
             else if (ballX < 0)
             {
                 ballXSpeed *= -1;
                 ballX = 1;
+                hit.Play();
             }
 
+            //goal 1
             if (ballY <= 0 && (ballX >= this.Width / 2 - 80 && ballX <= this.Width / 2 + 80))
             {
+                goal.Play();
                 player1Score++;
                 ballX = this.Width / 2;
                 ballY = this.Height / 2;
@@ -189,9 +210,13 @@ namespace AirHockey
             {
                 ballYSpeed *= -1;
                 ballY = 1;
+                hit.Play();
             }
+
+            //goal 2
             if (ballY >= this.Height - ballHeight && (ballX >= this.Width / 2 - 80 && ballX <= this.Width / 2 + 80))
             {
+                goal.Play();
                 player2Score++;
                 ballX = this.Width / 2;
                 ballY = this.Height / 2;
@@ -209,6 +234,7 @@ namespace AirHockey
             {
                 ballYSpeed *= -1;
                 ballY = this.Height - 1;
+                hit.Play();
             }
 
             //move player 1
@@ -359,6 +385,7 @@ namespace AirHockey
                 }
                 ballX = lastX;
                 ballY = lastY;
+                hit.Play();
             }
             else if (player2Rec.IntersectsWith(ballRec))
             {
@@ -460,6 +487,7 @@ namespace AirHockey
                 }
                 ballX = lastX;
                 ballY = lastY;
+                hit.Play();
             }
             accel = defAccel;
             lastX = ballX;
@@ -503,5 +531,6 @@ namespace AirHockey
             }
             
         }
+       
     }
 }
